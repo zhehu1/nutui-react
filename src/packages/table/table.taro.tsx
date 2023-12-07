@@ -1,10 +1,11 @@
 import React, { FunctionComponent, useEffect, useRef } from 'react'
 import classNames from 'classnames'
-import { ArrowDown } from '@nutui/icons-react-taro'
+import { ArrowDown } from '@nutui/icons-react'
 import { BasicTableProps, TableColumnProps } from './types'
-import { useConfig } from '@/packages/configprovider/configprovider.taro'
+import { useConfig } from '@/packages/configprovider'
 import { ComponentDefaults } from '@/utils/typings'
 import { usePropsValue } from '@/utils/use-props-value'
+import useTableSticky from './useTableSticky'
 
 export type TableProps = BasicTableProps
 
@@ -47,14 +48,16 @@ export const Table: FunctionComponent<
     defaultValue: data,
     finalValue: [],
   })
+  const { stickyLeftWidth, stickyRightWidth, getStickyClass, getStickyStyle } =
+    useTableSticky(columns)
 
   useEffect(() => {
     setValue(data)
   }, [data])
 
   const classPrefix = 'nut-table'
-  const headerClassPrefix = `${classPrefix}__main__head__tr`
-  const bodyClassPrefix = `${classPrefix}__main__body__tr`
+  const headerClassPrefix = `${classPrefix}-main-head-tr`
+  const bodyClassPrefix = `${classPrefix}-main-body-tr`
   const cls = classNames(classPrefix, className)
 
   const handleSorterClick = (item: TableColumnProps) => {
@@ -76,8 +79,8 @@ export const Table: FunctionComponent<
 
   const cellClasses = (item: TableColumnProps) => {
     return {
-      [`${headerClassPrefix}--border`]: props.bordered,
-      [`${headerClassPrefix}--align${item.align ? item.align : ''}`]: true,
+      [`${headerClassPrefix}-border`]: props.bordered,
+      [`${headerClassPrefix}-align${item.align ? item.align : ''}`]: true,
     }
   }
 
@@ -88,14 +91,20 @@ export const Table: FunctionComponent<
   const renderHeadCells = () => {
     return columns.map((item, index) => {
       return (
-        <span
-          className={classNames(`${headerClassPrefix}__th`, cellClasses(item))}
+        <div
+          className={classNames(
+            `${headerClassPrefix}-th`,
+            cellClasses(item),
+            getStickyClass(item.key)
+          )}
           key={item.key}
           onClick={() => handleSorterClick(item)}
+          style={getStickyStyle(item.key)}
         >
           {item.title}&nbsp;
-          {item.sorter && (sorterIcon || <ArrowDown size="12px" />)}
-        </span>
+          {item.sorter &&
+            (sorterIcon || <ArrowDown width="12px" height="12px" />)}
+        </div>
       )
     })
   }
@@ -109,19 +118,21 @@ export const Table: FunctionComponent<
   const renderBodyTds = (item: any, rowIndex: number) => {
     return sortDataItem().map(([value, render]) => {
       return (
-        <span
+        <div
           className={classNames(
-            `${bodyClassPrefix}__td`,
-            cellClasses(getColumnItem(value))
+            `${bodyClassPrefix}-td`,
+            cellClasses(getColumnItem(value)),
+            getStickyClass(value)
           )}
           key={value}
+          style={getStickyStyle(value)}
         >
           {typeof item[value] === 'function' || typeof render === 'function' ? (
             <div>{render ? render(item, rowIndex) : item[value](item)}</div>
           ) : (
             item[value]
           )}
-        </span>
+        </div>
       )
     })
   }
@@ -137,21 +148,31 @@ export const Table: FunctionComponent<
   }
 
   return (
-    <div className={cls} style={style} {...rest}>
-      <div
-        className={classNames(`${classPrefix}__main`, {
-          [`${classPrefix}__main--striped`]: striped,
-        })}
-      >
-        {showHeader && (
-          <div className={`${classPrefix}__main__head`}>
-            <div className={headerClassPrefix}>{renderHeadCells()}</div>
-          </div>
-        )}
-        <div className={`${classPrefix}__main__body`}>{renderBoyTrs()}</div>
+    <div className={cls} {...rest}>
+      <div className={classNames(`${classPrefix}-wrapper`)} style={style}>
+        <div
+          className={classNames(`${classPrefix}-main`, {
+            [`${classPrefix}-main-striped`]: striped,
+          })}
+        >
+          {showHeader && (
+            <div className={`${classPrefix}-main-head`}>
+              <div className={headerClassPrefix}>{renderHeadCells()}</div>
+            </div>
+          )}
+          <div className={`${classPrefix}-main-body`}>{renderBoyTrs()}</div>
+        </div>
       </div>
+      <div
+        className={`${classPrefix}-sticky-left`}
+        style={{ width: stickyLeftWidth }}
+      />
+      <div
+        className={`${classPrefix}-sticky-right`}
+        style={{ width: stickyRightWidth }}
+      />
       {(summary || innerValue.length === 0) && (
-        <div className={`${classPrefix}__summary`}>{summary || noData}</div>
+        <div className={`${classPrefix}-summary`}>{summary || noData}</div>
       )}
     </div>
   )

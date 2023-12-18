@@ -1714,7 +1714,7 @@ $indicator-dot-active-size: var(
   --nutui-indicator-dot-active-size,
   20px
 ) !default;
-$indicator-border-radius: var(--nutui-indicator-border-radius, 2px) !default;
+$indicator-border-radius: var(--nutui-indicator-border-radius, 6px) !default;
 $indicator-dot-margin: var(--nutui-indicator-dot-margin, $spacing-xs) !default;
 
 // menu（✅）

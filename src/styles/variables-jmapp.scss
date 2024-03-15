@@ -407,13 +407,13 @@ $cell-description-font-size: var(
 ) !default;
 $cell-description-color: var(
   --nutui-cell-description-color,
-  $color-text
+  $color-text-help
 ) !default;
 $cell-extra-font-size: var(
   --nutui-cell-extra-font-size,
   $font-size-base
 ) !default;
-$cell-extra-color: var(--nutui-cell-extra-color, $color-text) !default;
+$cell-extra-color: var(--nutui-cell-extra-color, $color-text-help) !default;
 $cell-border-radius: var(--nutui-cell-border-radius, 6px) !default;
 $cell-padding: var(--nutui-cell-padding, 13px 16px) !default;
 $cell-line-height: var(--nutui-cell-line-height, 20px) !default;
@@ -424,10 +424,7 @@ $cell-divider-border-bottom: var(
   2px solid $color-border
 ) !default;
 $cell-background-color: var(--nutui-cell-background-color, $white) !default;
-$cell-box-shadow: var(
-  --nutui-cell-box-shadow,
-  0px 1px 7px 0px rgba(237, 238, 241, 1)
-) !default;
+$cell-box-shadow: var(--nutui-cell-box-shadow, none) !default;
 
 // cell-group（✅）
 $cell-group-title-padding: var(
@@ -1368,7 +1365,7 @@ $checkbox-list-background-color: var(
 ) !default;
 $checkbox-list-item-border: var(
   --nutui-checkbox-list-item-border,
-  1px solid $color-border
+  none
 ) !default;
 $checkbox-list-padding: var(--nutui-checkbox-list-padding, 0 0 0 12px) !default;
 $checkbox-list-item-padding: var(

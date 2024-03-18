@@ -14,7 +14,7 @@ import { BasicComponent, ComponentDefaults } from '@/utils/typings'
 import AvatarGroup from '@/packages/avatargroup'
 
 export interface AvatarProps extends BasicComponent {
-  size: string
+  size: string | number
   icon: React.ReactNode
   fit: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
   shape: AvatarShape
@@ -78,8 +78,8 @@ export const Avatar: FunctionComponent<
   const cls = classNames(classPrefix, classes, className)
 
   const styles: React.CSSProperties = {
-    width: sizeValue.indexOf(size) > -1 ? '' : `${size}px`,
-    height: sizeValue.indexOf(size) > -1 ? '' : `${size}px`,
+    width: sizeValue.indexOf(String(size)) > -1 ? '' : `${size}px`,
+    height: sizeValue.indexOf(String(size)) > -1 ? '' : `${size}px`,
     backgroundColor: `${background}`,
     color,
     marginLeft:
